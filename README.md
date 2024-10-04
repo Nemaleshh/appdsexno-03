@@ -45,8 +45,11 @@ df = pd.read_csv('emobile.csv')
 df.head()
 ```
 <br>
+
 ![alt text](image2.png)
+
 <br>
+
 ```py
 dx = pd.read_csv('maxmobile.csv')
 dx.drop_duplicates(inplace=True)
@@ -54,7 +57,9 @@ df.drop_duplicates(inplace=True)
 df.columns =['Product_id','Product_Name','Rating','Review_Count_ds1']
 dx.columns=['Product_id','Product_Name','Rating','Reivew_Count_ds2']
 ```
+
 <br>
+
 ```py
 def match_products(name,choices,limit=1):
     results = process.extract(name,choices,limit=limit)
@@ -63,35 +68,50 @@ dx['Match_Product']= dx['Product_Name'].apply(lambda x:match_products(x,df['Prod
 merged_df = pd.merge(df,dx,left_on='Product_Name',right_on='Match_Product',how='inner',suffixes=('_ds1','_ds2'))
 merged_df
 ```
+
 <br>
+
 ![alt text](image3.png)
+
 <br>
+
 ```py
 x=merged_df['Review_Count_ds1']+merged_df['Reivew_Count_ds2']
 merged_df['Combined_Rating']= (merged_df['Rating_ds1']*merged_df['Review_Count_ds1']+merged_df['Rating_ds2']*merged_df['Reivew_Count_ds2'])/x
 merged_df['Recomendaation_Score']=0.7*merged_df['Combined_Rating']+0.3*merged_df['Rating_ds1']
 merged_df.head()
 ```
+
 <br>
+
 ![alt text](image4.png)
+
 ```py
 best_products = merged_df.sort_values(by='Recomendaation_Score',ascending=False)
 best_products.columns
 print(best_products[['Match_Product','Combined_Rating','Recomendaation_Score']])
 ```
+
 <br>
+
 ![alt text](image5.png)
+
 <br>
+
 ```py
 best_products[['Match_Product','Combined_Rating','Recomendaation_Score']].to_csv('best_products.csv')
 rp=pd.read_csv('best_products.csv')
 rp.head()
 ```
 <br>
+
 ![alt text](image.png)
+
 <br>
 
 
 **RESULT**
+
 <br>
+
 Thus we have sucessfully completed Recomendation Systems
